@@ -81,8 +81,12 @@ export function ExperiencesSlider() {
       <div className="mt-4 flex justify-center gap-1.5">
         {posts.map((_, i) => (
           <button key={i} onClick={() => setIdx(i)} aria-label={`Slide ${i + 1}`}
-            className="h-11 rounded-full transition-all"
-            style={{ width: i === idx ? 24 : 8, background: i === idx ? "var(--fuchsia)" : "rgba(255,255,255,0.25)" }} />
+            className="grid h-11 w-11 place-items-center rounded-full">
+            <span
+              className="h-1.5 rounded-full transition-all"
+              style={{ width: i === idx ? 24 : 8, background: i === idx ? "var(--fuchsia)" : "rgba(255,255,255,0.25)" }}
+            />
+          </button>
         ))}
       </div>
     </section>

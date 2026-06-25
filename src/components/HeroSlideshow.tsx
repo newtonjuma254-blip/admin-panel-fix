@@ -106,12 +106,16 @@ export function HeroSlideshow() {
                 key={i}
                 aria-label={`Slide ${i + 1}`}
                 onClick={() => setIdx(i)}
-                className="h-11 rounded-full transition-all"
-                style={{
-                  width: i === idx ? 28 : 8,
-                  background: i === idx ? "var(--cyan)" : "rgba(255,255,255,0.3)",
-                }}
-              />
+                className="grid h-11 w-11 place-items-center rounded-full"
+              >
+                <span
+                  className="h-2 rounded-full transition-all"
+                  style={{
+                    width: i === idx ? 28 : 8,
+                    background: i === idx ? "var(--cyan)" : "rgba(255,255,255,0.3)",
+                  }}
+                />
+              </button>
             ))}
           </div>
         </>

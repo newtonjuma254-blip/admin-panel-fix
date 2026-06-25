@@ -49,7 +49,7 @@ export function StoreLocations() {
                 <div className="mt-4 border-t border-white/5 pt-4 space-y-2">
                   {phones.map((p, i) => (
                     <a key={i} href={`tel:${p.replace(/\s/g, "")}`}
-                      className="flex items-center gap-2 text-sm font-heading hover:text-foreground text-muted-foreground transition">
+                      className="flex min-h-11 items-center gap-2 text-sm font-heading text-muted-foreground transition hover:text-foreground">
                       <Phone className="h-3.5 w-3.5" style={{ color: "var(--cyan)" }} />
                       <span>{p}</span>
                     </a>
