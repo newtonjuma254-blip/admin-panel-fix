@@ -15,7 +15,11 @@ export function ExperiencesSlider() {
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await db.from("blog_posts").select("*").order("created_at", { ascending: false });
+      const { data, error } = await db.from("blog_posts").select("*").order("created_at", { ascending: false });
+      if (error) {
+        console.error("Blog posts fetch error:", error);
+        return;
+      }
       setPosts(data ?? []);
     };
     load();
