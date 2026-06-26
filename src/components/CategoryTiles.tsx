@@ -23,7 +23,11 @@ export function CategoryTiles({ onPick }: { onPick?: (cat: string) => void }) {
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await db.from("category_tiles").select("*");
+      const { data, error } = await db.from("category_tiles").select("*");
+      if (error) {
+        console.error("Category tiles fetch error:", error);
+        return;
+      }
       setTiles(data ?? []);
     };
     load();

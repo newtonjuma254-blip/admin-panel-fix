@@ -39,9 +39,14 @@ export function InteractiveShowroom({
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await db.from("products")
+      const { data, error } = await db.from("products")
         .select("id, name, category, price, duration, image, image_url, video_url, badge_tag, description")
         .order("created_at", { ascending: true });
+      if (error) {
+        console.error("Products fetch error:", error);
+        setLoading(false);
+        return;
+      }
       setRows(data ?? []);
       setLoading(false);
     };
@@ -120,7 +125,8 @@ function ShowroomCard({ row, onAdd }: { row: Row; onAdd: (p: Product) => void })
   const vref = useRef<HTMLVideoElement>(null);
   const [hover, setHover] = useState(false);
 
-  const image = row.image_url || resolveImage(row.image ?? "", row.category);
+  const image = row.image_url?.startsWith("http") ? row.image_url : resolveImage(row.image ?? "", row.category);
+  const video = row.video_url?.startsWith("http") ? row.video_url : undefined;
 
   const product: Product = {
     id: row.id,
@@ -129,6 +135,7 @@ function ShowroomCard({ row, onAdd }: { row: Row; onAdd: (p: Product) => void })
     price: Number(row.price),
     duration: row.duration ?? "60s",
     image,
+    video,
     tag: (row.badge_tag as any) ?? "NEW",
     description: row.description ?? "",
   };
@@ -136,7 +143,7 @@ function ShowroomCard({ row, onAdd }: { row: Row; onAdd: (p: Product) => void })
   const onEnter = () => {
     setHover(true);
     setHoverProduct({ name: row.name, price: Number(row.price) });
-    if (row.video_url && vref.current) {
+    if (video && vref.current) {
       vref.current.currentTime = 0;
       vref.current.play().catch(() => {});
     }
@@ -164,12 +171,12 @@ function ShowroomCard({ row, onAdd }: { row: Row; onAdd: (p: Product) => void })
           alt={row.name}
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500"
-          style={{ opacity: hover && row.video_url ? 0 : 1 }}
+          style={{ opacity: hover && video ? 0 : 1 }}
         />
-        {row.video_url && (
+        {video && (
           <video
             ref={vref}
-            src={row.video_url}
+            src={video}
             muted loop playsInline preload="metadata"
             className="absolute inset-0 h-full w-full object-cover"
             style={{ opacity: hover ? 1 : 0, transition: "opacity 500ms" }}
