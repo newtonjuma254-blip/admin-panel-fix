@@ -5,7 +5,7 @@ export const Route = createFileRoute("/api/public/seed-admin")({
     handlers: {
       POST: async ({ request }) => {
         const { email, password, token } = await request.json();
-        if (token !== process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        if (!process.env.ADMIN_SEED_TOKEN || token !== process.env.ADMIN_SEED_TOKEN) {
           return new Response("forbidden", { status: 403 });
         }
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
