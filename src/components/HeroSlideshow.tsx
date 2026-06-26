@@ -15,7 +15,11 @@ export function HeroSlideshow() {
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await db.from("hero_slides").select("*").order("position", { ascending: true });
+      const { data, error } = await db.from("hero_slides").select("*").order("position", { ascending: true });
+      if (error) {
+        console.error("Hero slides fetch error:", error);
+        return;
+      }
       setSlides(data ?? []);
     };
     load();

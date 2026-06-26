@@ -117,7 +117,13 @@ function ContentTab() {
   const [loading, setLoading] = useState(true);
 
   const load = async () => {
-    const { data } = await db.from("site_settings").select("*");
+    const { data, error } = await db.from("site_settings").select("*");
+    if (error) {
+      console.error("Site settings fetch error:", error);
+      toast.error(error.message);
+      setLoading(false);
+      return;
+    }
     const map: Record<string, string> = {};
     (data ?? []).forEach((r: any) => { map[r.key] = r.value ?? ""; });
     setSettings(map);
@@ -184,7 +190,10 @@ function ProductsTab() {
   const load = async () => {
     setLoading(true);
     const { data, error } = await supabase.from("products").select("*").order("created_at", { ascending: false });
-    if (error) toast.error(error.message);
+    if (error) {
+      console.error("Products fetch error:", error);
+      toast.error(error.message);
+    }
     setRows((data ?? []) as any);
     setLoading(false);
   };
@@ -358,10 +367,18 @@ function MediaTab() {
   const [newVid, setNewVid] = useState("");
 
   const load = async () => {
-    const [{ data: s }, { data: t }] = await Promise.all([
+    const [{ data: s, error: slidesError }, { data: t, error: tilesError }] = await Promise.all([
       db.from("hero_slides").select("*").order("position"),
       db.from("category_tiles").select("*").order("category"),
     ]);
+    if (slidesError) {
+      console.error("Hero slides fetch error:", slidesError);
+      toast.error(slidesError.message);
+    }
+    if (tilesError) {
+      console.error("Category tiles fetch error:", tilesError);
+      toast.error(tilesError.message);
+    }
     setSlides((s ?? []) as HeroSlide[]);
     setTiles((t ?? []) as CategoryTile[]);
     setLoading(false);
@@ -493,7 +510,12 @@ function BlogTab() {
   const [busy, setBusy] = useState(false);
 
   const load = async () => {
-    const { data } = await db.from("blog_posts").select("*").order("created_at", { ascending: false });
+    const { data, error } = await db.from("blog_posts").select("*").order("created_at", { ascending: false });
+    if (error) {
+      console.error("Blog posts fetch error:", error);
+      toast.error(error.message);
+      return;
+    }
     setPosts((data ?? []) as BlogPost[]);
   };
   useEffect(() => { load(); }, []);
@@ -581,7 +603,12 @@ function LocationsTab() {
   const [busy, setBusy] = useState(false);
 
   const load = async () => {
-    const { data } = await db.from("store_locations").select("*").order("created_at", { ascending: false });
+    const { data, error } = await db.from("store_locations").select("*").order("created_at", { ascending: false });
+    if (error) {
+      console.error("Store locations fetch error:", error);
+      toast.error(error.message);
+      return;
+    }
     setItems((data ?? []) as Location[]);
   };
   useEffect(() => { load(); }, []);

@@ -23,7 +23,11 @@ export function StorefrontProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await db.from("site_settings").select("*");
+      const { data, error } = await db.from("site_settings").select("*");
+      if (error) {
+        console.error("Site settings fetch error:", error);
+        return;
+      }
       const map: Record<string, string> = {};
       (data ?? []).forEach((r: any) => { map[r.key] = r.value ?? ""; });
       setSettings(map);

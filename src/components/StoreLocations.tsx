@@ -11,7 +11,11 @@ export function StoreLocations() {
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await db.from("store_locations").select("*").order("city", { ascending: true });
+      const { data, error } = await db.from("store_locations").select("*").order("city", { ascending: true });
+      if (error) {
+        console.error("Store locations fetch error:", error);
+        return;
+      }
       setLocs(data ?? []);
     };
     load();

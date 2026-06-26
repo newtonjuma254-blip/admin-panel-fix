@@ -40,7 +40,12 @@ export function ProductGrid({ onAdd, onWatch }: { onAdd: (p: Product) => void; o
         .select("id, name, category, price, duration, image, image_url, video_url, badge_tag, description")
         .order("created_at", { ascending: true });
       if (!active) return;
-      if (error || !data) { setLoading(false); return; }
+      if (error) {
+        console.error("Products fetch error:", error);
+        setLoading(false);
+        return;
+      }
+      if (!data) { setLoading(false); return; }
       setProducts(
         data.map((p: any) => ({
           id: p.id,
