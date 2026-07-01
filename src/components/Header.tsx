@@ -34,8 +34,10 @@ export function Header({ cartCount, adminMode, onToggleAdmin, onOpenCart }: Head
             </div>
           )}
           <div className="min-w-0 leading-tight">
-            <div className="truncate font-display text-sm font-bold tracking-tight xs:text-base">NAIROBI <span className="text-aurora">FIREWORKS</span></div>
-            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Shop</div>
+            <div className="font-display text-[13px] font-bold tracking-tight break-words xs:text-sm sm:text-base md:whitespace-nowrap">
+              NAIROBI <span className="text-aurora">FIREWORKS</span>
+            </div>
+            <div className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[10px]">Shop</div>
           </div>
         </a>
 
