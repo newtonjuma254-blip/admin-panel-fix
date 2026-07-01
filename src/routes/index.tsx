@@ -79,11 +79,11 @@ function Index() {
         {/* 1. Hero slideshow */}
         <HeroSlideshow />
 
-        {/* 2. Multi-step conversion funnel */}
-        <OrderFunnel />
-
-        {/* 3. Category grid */}
+        {/* 2. Category grid */}
         <CategoryTiles onPick={handlePickCategory} />
+
+        {/* 3. Custom Show Builder (multi-step funnel) */}
+        <OrderFunnel />
 
         {/* 4. Interactive digital showroom */}
         <InteractiveShowroom cat={activeCat} setCat={setActiveCat} onAdd={(p) => setCart([...cart, p])} />

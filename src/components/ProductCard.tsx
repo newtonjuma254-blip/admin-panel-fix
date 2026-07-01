@@ -53,7 +53,6 @@ export function ProductCard({ product, onAdd, onWatch }: { product: Product; onA
             style={{ opacity: hover ? 1 : 0 }}
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
 
         <span
           className={`absolute left-3 top-3 rounded-full border px-2.5 py-1 text-[10px] font-heading font-bold tracking-[0.15em] ${tagStyles[product.tag]}`}
