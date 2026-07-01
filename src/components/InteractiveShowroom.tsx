@@ -182,7 +182,6 @@ function ShowroomCard({ row, onAdd }: { row: Row; onAdd: (p: Product) => void })
             style={{ opacity: hover ? 1 : 0, transition: "opacity 500ms" }}
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         <span className="absolute left-3 top-3 rounded-full border px-2.5 py-1 text-[10px] font-heading font-bold tracking-[0.15em]"
           style={{ color: "var(--cyan)", borderColor: "color-mix(in oklab, var(--cyan) 50%, transparent)", background: "color-mix(in oklab, var(--cyan) 12%, transparent)" }}>
           {row.badge_tag || "NEW"}

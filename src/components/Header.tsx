@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Menu, Sparkles, ShoppingBag, ShieldCheck, X } from "lucide-react";
+import { useStorefront } from "@/lib/storefront";
 
 interface HeaderProps {
   cartCount: number;
@@ -10,6 +11,8 @@ interface HeaderProps {
 
 export function Header({ cartCount, adminMode, onToggleAdmin, onOpenCart }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { settings } = useStorefront();
+  const logoUrl = settings.logo_url?.trim();
 
   const closeMobile = () => setMobileOpen(false);
 
@@ -17,13 +20,22 @@ export function Header({ cartCount, adminMode, onToggleAdmin, onOpenCart }: Head
     <header className="sticky top-0 z-50 glass border-b border-white/5">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
         <a href="#top" className="group flex min-h-11 min-w-0 items-center gap-3" onClick={closeMobile}>
-          <div className="relative grid h-10 w-10 place-items-center rounded-xl bg-aurora glow-violet">
-            <Sparkles className="h-5 w-5 text-white" strokeWidth={2.5} />
-            <div className="absolute inset-0 rounded-xl bg-aurora opacity-50 blur-md -z-10 animate-pulse-glow" />
-          </div>
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt="Nairobi Fireworks Shop logo"
+              className="h-12 w-12 shrink-0 rounded-xl object-contain sm:h-14 sm:w-14"
+              loading="eager"
+            />
+          ) : (
+            <div className="relative grid h-10 w-10 place-items-center rounded-xl bg-aurora glow-violet">
+              <Sparkles className="h-5 w-5 text-white" strokeWidth={2.5} />
+              <div className="absolute inset-0 rounded-xl bg-aurora opacity-50 blur-md -z-10 animate-pulse-glow" />
+            </div>
+          )}
           <div className="min-w-0 leading-tight">
             <div className="truncate font-display text-sm font-bold tracking-tight xs:text-base">NAIROBI <span className="text-aurora">FIREWORKS</span></div>
-            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Store</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Shop</div>
           </div>
         </a>
 
