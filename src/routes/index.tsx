@@ -1,20 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { X, Sparkles } from "lucide-react";
 import { Header } from "@/components/Header";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
-import { OrderFunnel } from "@/components/OrderFunnel";
 import { CategoryTiles } from "@/components/CategoryTiles";
-import { InteractiveShowroom } from "@/components/InteractiveShowroom";
-import { ExperiencesSlider } from "@/components/ExperiencesSlider";
-import { BlogSection } from "@/components/BlogSection";
-import { StoreLocations } from "@/components/StoreLocations";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
-import { AdminAuth } from "@/components/AdminAuth";
-import { AdminPanel } from "@/components/AdminPanel";
 import { StorefrontProvider } from "@/lib/storefront";
 import { supabase } from "@/integrations/supabase/client";
 import type { Product } from "@/lib/products";
+
+const OrderFunnel = lazy(() => import("@/components/OrderFunnel").then(m => ({ default: m.OrderFunnel })));
+const InteractiveShowroom = lazy(() => import("@/components/InteractiveShowroom").then(m => ({ default: m.InteractiveShowroom })));
+const ExperiencesSlider = lazy(() => import("@/components/ExperiencesSlider").then(m => ({ default: m.ExperiencesSlider })));
+const BlogSection = lazy(() => import("@/components/BlogSection").then(m => ({ default: m.BlogSection })));
+const StoreLocations = lazy(() => import("@/components/StoreLocations").then(m => ({ default: m.StoreLocations })));
+const AdminAuth = lazy(() => import("@/components/AdminAuth").then(m => ({ default: m.AdminAuth })));
+const AdminPanel = lazy(() => import("@/components/AdminPanel").then(m => ({ default: m.AdminPanel })));
+
+const SectionFallback = () => (
+  <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+    <div className="h-64 rounded-2xl bg-white/5 animate-pulse" />
+  </div>
+);
 
 export const Route = createFileRoute("/")({
   component: Index,
