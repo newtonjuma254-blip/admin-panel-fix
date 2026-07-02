@@ -134,7 +134,7 @@ function BlogCarousel({ images, title, tag }: { images: string[]; title: string;
           <button
             type="button"
             aria-label="Previous image"
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIdx((i) => (i - 1 + images.length) % images.length); }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIdx((i) => (i - 1 + valid.length) % valid.length); }}
             className="absolute left-2 top-1/2 z-10 -translate-y-1/2 grid h-11 w-11 place-items-center rounded-full border border-white/20 bg-black/40 backdrop-blur hover:bg-black/60"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -142,13 +142,13 @@ function BlogCarousel({ images, title, tag }: { images: string[]; title: string;
           <button
             type="button"
             aria-label="Next image"
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIdx((i) => (i + 1) % images.length); }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIdx((i) => (i + 1) % valid.length); }}
             className="absolute right-2 top-1/2 z-10 -translate-y-1/2 grid h-11 w-11 place-items-center rounded-full border border-white/20 bg-black/40 backdrop-blur hover:bg-black/60"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
           <div className="absolute bottom-2 left-1/2 z-10 -translate-x-1/2 flex gap-1.5">
-            {images.map((_, i) => (
+            {valid.map((_, i) => (
               <span
                 key={i}
                 className="h-1.5 rounded-full transition-all"
