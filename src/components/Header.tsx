@@ -18,35 +18,40 @@ export function Header({ cartCount, adminMode, onToggleAdmin, onOpenCart }: Head
 
   return (
     <header className="sticky top-0 z-50 glass border-b border-white/5">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
-        <a href="#top" className="group flex min-h-11 min-w-0 items-center gap-3" onClick={closeMobile}>
+      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:px-6 sm:py-4 md:grid-cols-[auto_minmax(0,1fr)_auto]">
+        <a href="#top" className="group flex min-h-11 min-w-0 items-center gap-2 sm:gap-3" onClick={closeMobile}>
           {logoUrl ? (
             <img
               src={logoUrl}
               alt="Nairobi Fireworks Shop logo"
-              className="h-12 w-12 shrink-0 rounded-xl object-contain sm:h-14 sm:w-14"
+              width={56}
+              height={56}
+              className="h-10 w-10 shrink-0 rounded-xl object-contain sm:h-12 sm:w-12"
               loading="eager"
+              fetchPriority="high"
+              decoding="async"
             />
           ) : (
-            <div className="relative grid h-10 w-10 place-items-center rounded-xl bg-aurora glow-violet">
+            <div className="relative grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-aurora glow-violet">
               <Sparkles className="h-5 w-5 text-white" strokeWidth={2.5} />
               <div className="absolute inset-0 rounded-xl bg-aurora opacity-50 blur-md -z-10 animate-pulse-glow" />
             </div>
           )}
           <div className="min-w-0 leading-tight">
-            <div className="font-display text-[13px] font-bold tracking-tight break-words xs:text-sm sm:text-base md:whitespace-nowrap">
+            <div className="font-display text-[13px] font-bold tracking-tight truncate xs:text-sm lg:text-base">
               NAIROBI <span className="text-aurora">FIREWORKS</span>
             </div>
             <div className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[10px]">Shop</div>
           </div>
         </a>
 
-        <nav className="hidden md:flex items-center gap-8 text-sm font-heading text-muted-foreground">
+        <nav className="hidden md:flex md:min-w-0 md:justify-center items-center gap-4 lg:gap-7 text-sm font-heading text-muted-foreground">
           <a href="#catalog" className="inline-flex min-h-11 items-center transition hover:text-foreground">Catalog</a>
-          <a href="#funnel" className="inline-flex min-h-11 items-center transition hover:text-foreground">Order Funnel</a>
+          <a href="#funnel" className="inline-flex min-h-11 items-center whitespace-nowrap transition hover:text-foreground">Order Funnel</a>
           <a href="#hero" className="inline-flex min-h-11 items-center transition hover:text-foreground">Showcase</a>
           <a href="#contact" className="inline-flex min-h-11 items-center transition hover:text-foreground">Contact</a>
         </nav>
+
 
         <div className="flex shrink-0 items-center gap-2">
           <button
