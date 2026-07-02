@@ -74,8 +74,8 @@ function Index() {
           onToggleAdmin={handleAdminClick}
           onOpenCart={() => setCartOpen(true)}
         />
-        {authOpen && <AdminAuth onClose={() => setAuthOpen(false)} onSuccess={() => { setAuthOpen(false); setPanelOpen(true); }} />}
-        {panelOpen && <AdminPanel onClose={() => setPanelOpen(false)} onSignOut={handleSignOut} />}
+        {authOpen && <Suspense fallback={null}><AdminAuth onClose={() => setAuthOpen(false)} onSuccess={() => { setAuthOpen(false); setPanelOpen(true); }} /></Suspense>}
+        {panelOpen && <Suspense fallback={null}><AdminPanel onClose={() => setPanelOpen(false)} onSignOut={handleSignOut} /></Suspense>}
 
         {panelOpen && (
           <div className="border-b border-cyan/20 bg-cyan/5 text-center py-2 text-xs font-heading uppercase tracking-[0.2em]" style={{ color: "var(--cyan)" }}>
@@ -90,19 +90,20 @@ function Index() {
         <CategoryTiles onPick={handlePickCategory} />
 
         {/* 3. Custom Show Builder (multi-step funnel) */}
-        <OrderFunnel />
+        <Suspense fallback={<SectionFallback />}><OrderFunnel /></Suspense>
 
         {/* 4. Interactive digital showroom */}
-        <InteractiveShowroom cat={activeCat} setCat={setActiveCat} onAdd={(p) => setCart([...cart, p])} />
+        <Suspense fallback={<SectionFallback />}><InteractiveShowroom cat={activeCat} setCat={setActiveCat} onAdd={(p) => setCart([...cart, p])} /></Suspense>
 
         {/* 5. Retained experiences slider */}
-        <ExperiencesSlider />
+        <Suspense fallback={<SectionFallback />}><ExperiencesSlider /></Suspense>
 
         {/* 6. FireGuide blog */}
-        <BlogSection />
+        <Suspense fallback={<SectionFallback />}><BlogSection /></Suspense>
 
         {/* 7. Geographic outlets map dock */}
-        <StoreLocations />
+        <Suspense fallback={<SectionFallback />}><StoreLocations /></Suspense>
+
 
         {/* Footer */}
         <footer id="contact" className="border-t border-white/5 mt-12">
