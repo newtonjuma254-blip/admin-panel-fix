@@ -522,8 +522,10 @@ function BlogTab() {
 
   const publish = async () => {
     if (!title.trim()) return toast.error("Title required");
+    // Auto-include any URL sitting in the input that the user forgot to add
+    const finalImages = imgUrl.trim() ? [...images, imgUrl.trim()] : images;
     setBusy(true);
-    const { error } = await db.from("blog_posts").insert({ title, tag, date_label: date, excerpt, content, images }).select("id").single();
+    const { error } = await db.from("blog_posts").insert({ title, tag, date_label: date, excerpt, content, images: finalImages }).select("id").single();
     setBusy(false);
     if (error) return toast.error(error.message);
     toast.success("Post published and confirmed in Supabase");
