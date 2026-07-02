@@ -84,25 +84,36 @@ export function BlogSection() {
 
 function BlogCarousel({ images, title, tag }: { images: string[]; title: string; tag: string }) {
   const [idx, setIdx] = useState(0);
-  const hasMultiple = images.length > 1;
+  const [broken, setBroken] = useState<Record<number, boolean>>({});
+  const valid = images.filter((_, i) => !broken[i]);
+  const hasMultiple = valid.length > 1;
 
   useEffect(() => {
     if (!hasMultiple) return;
-    const t = setInterval(() => setIdx((i) => (i + 1) % images.length), 4000);
+    const t = setInterval(() => setIdx((i) => (i + 1) % valid.length), 4000);
     return () => clearInterval(t);
-  }, [hasMultiple, images.length]);
+  }, [hasMultiple, valid.length]);
+
+  useEffect(() => { if (idx >= valid.length) setIdx(0); }, [valid.length, idx]);
 
   return (
     <div className="relative aspect-[16/10] overflow-hidden bg-black/40">
-      {images.length === 0 ? (
-        <div className="absolute inset-0" style={{ background: "var(--gradient-night)" }} />
+      {valid.length === 0 ? (
+        <div className="absolute inset-0 grid place-items-center" style={{ background: "var(--gradient-night)" }}>
+          <span className="text-[10px] font-heading uppercase tracking-[0.25em] text-muted-foreground">No image</span>
+        </div>
       ) : (
-        images.map((src, i) => (
+        valid.map((src, i) => (
           <img
-            key={i}
+            key={src + i}
             src={src}
             alt={title}
             loading="lazy"
+            referrerPolicy="no-referrer"
+            onError={() => {
+              const origIdx = images.indexOf(src);
+              setBroken((b) => ({ ...b, [origIdx]: true }));
+            }}
             className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
             style={{ opacity: i === idx ? 1 : 0 }}
           />
@@ -123,7 +134,7 @@ function BlogCarousel({ images, title, tag }: { images: string[]; title: string;
           <button
             type="button"
             aria-label="Previous image"
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIdx((i) => (i - 1 + images.length) % images.length); }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIdx((i) => (i - 1 + valid.length) % valid.length); }}
             className="absolute left-2 top-1/2 z-10 -translate-y-1/2 grid h-11 w-11 place-items-center rounded-full border border-white/20 bg-black/40 backdrop-blur hover:bg-black/60"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -131,13 +142,13 @@ function BlogCarousel({ images, title, tag }: { images: string[]; title: string;
           <button
             type="button"
             aria-label="Next image"
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIdx((i) => (i + 1) % images.length); }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIdx((i) => (i + 1) % valid.length); }}
             className="absolute right-2 top-1/2 z-10 -translate-y-1/2 grid h-11 w-11 place-items-center rounded-full border border-white/20 bg-black/40 backdrop-blur hover:bg-black/60"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
           <div className="absolute bottom-2 left-1/2 z-10 -translate-x-1/2 flex gap-1.5">
-            {images.map((_, i) => (
+            {valid.map((_, i) => (
               <span
                 key={i}
                 className="h-1.5 rounded-full transition-all"

@@ -522,8 +522,10 @@ function BlogTab() {
 
   const publish = async () => {
     if (!title.trim()) return toast.error("Title required");
+    // Auto-include any URL sitting in the input that the user forgot to add
+    const finalImages = imgUrl.trim() ? [...images, imgUrl.trim()] : images;
     setBusy(true);
-    const { error } = await db.from("blog_posts").insert({ title, tag, date_label: date, excerpt, content, images }).select("id").single();
+    const { error } = await db.from("blog_posts").insert({ title, tag, date_label: date, excerpt, content, images: finalImages }).select("id").single();
     setBusy(false);
     if (error) return toast.error(error.message);
     toast.success("Post published and confirmed in Supabase");
@@ -551,13 +553,24 @@ function BlogTab() {
 
         <div className="mt-4">
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Input placeholder="Add image URL" value={imgUrl} onChange={(e) => setImgUrl(e.target.value)} />
+            <Input
+              placeholder="Paste image URL (https://…)"
+              value={imgUrl}
+              onChange={(e) => setImgUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && imgUrl.trim()) {
+                  e.preventDefault();
+                  setImages([...images, imgUrl.trim()]);
+                  setImgUrl("");
+                }
+              }}
+            />
             <FileUpload accept="image/*" folder="blog" onUploaded={(url) => setImages((arr) => [...arr, url])} />
           </div>
           <button type="button"
-            onClick={() => { if (!imgUrl) return; setImages([...images, imgUrl]); setImgUrl(""); }}
+            onClick={() => { if (!imgUrl.trim()) return; setImages([...images, imgUrl.trim()]); setImgUrl(""); }}
             className="mt-2 min-h-11 w-full rounded-xl border border-dashed border-white/15 px-3 py-2 text-xs font-heading text-muted-foreground hover:border-white/30">
-            + Add Image URL
+            + Add Image URL to Post
           </button>
           {images.length ? (
             <div className="mt-3 flex flex-wrap gap-2">
