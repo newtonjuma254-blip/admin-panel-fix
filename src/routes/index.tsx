@@ -1,20 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { X, Sparkles } from "lucide-react";
 import { Header } from "@/components/Header";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
-import { OrderFunnel } from "@/components/OrderFunnel";
 import { CategoryTiles } from "@/components/CategoryTiles";
-import { InteractiveShowroom } from "@/components/InteractiveShowroom";
-import { ExperiencesSlider } from "@/components/ExperiencesSlider";
-import { BlogSection } from "@/components/BlogSection";
-import { StoreLocations } from "@/components/StoreLocations";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
-import { AdminAuth } from "@/components/AdminAuth";
-import { AdminPanel } from "@/components/AdminPanel";
 import { StorefrontProvider } from "@/lib/storefront";
 import { supabase } from "@/integrations/supabase/client";
 import type { Product } from "@/lib/products";
+
+const OrderFunnel = lazy(() => import("@/components/OrderFunnel").then(m => ({ default: m.OrderFunnel })));
+const InteractiveShowroom = lazy(() => import("@/components/InteractiveShowroom").then(m => ({ default: m.InteractiveShowroom })));
+const ExperiencesSlider = lazy(() => import("@/components/ExperiencesSlider").then(m => ({ default: m.ExperiencesSlider })));
+const BlogSection = lazy(() => import("@/components/BlogSection").then(m => ({ default: m.BlogSection })));
+const StoreLocations = lazy(() => import("@/components/StoreLocations").then(m => ({ default: m.StoreLocations })));
+const AdminAuth = lazy(() => import("@/components/AdminAuth").then(m => ({ default: m.AdminAuth })));
+const AdminPanel = lazy(() => import("@/components/AdminPanel").then(m => ({ default: m.AdminPanel })));
+
+const SectionFallback = () => (
+  <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+    <div className="h-64 rounded-2xl bg-white/5 animate-pulse" />
+  </div>
+);
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -67,8 +74,8 @@ function Index() {
           onToggleAdmin={handleAdminClick}
           onOpenCart={() => setCartOpen(true)}
         />
-        {authOpen && <AdminAuth onClose={() => setAuthOpen(false)} onSuccess={() => { setAuthOpen(false); setPanelOpen(true); }} />}
-        {panelOpen && <AdminPanel onClose={() => setPanelOpen(false)} onSignOut={handleSignOut} />}
+        {authOpen && <Suspense fallback={null}><AdminAuth onClose={() => setAuthOpen(false)} onSuccess={() => { setAuthOpen(false); setPanelOpen(true); }} /></Suspense>}
+        {panelOpen && <Suspense fallback={null}><AdminPanel onClose={() => setPanelOpen(false)} onSignOut={handleSignOut} /></Suspense>}
 
         {panelOpen && (
           <div className="border-b border-cyan/20 bg-cyan/5 text-center py-2 text-xs font-heading uppercase tracking-[0.2em]" style={{ color: "var(--cyan)" }}>
@@ -83,19 +90,20 @@ function Index() {
         <CategoryTiles onPick={handlePickCategory} />
 
         {/* 3. Custom Show Builder (multi-step funnel) */}
-        <OrderFunnel />
+        <Suspense fallback={<SectionFallback />}><OrderFunnel /></Suspense>
 
         {/* 4. Interactive digital showroom */}
-        <InteractiveShowroom cat={activeCat} setCat={setActiveCat} onAdd={(p) => setCart([...cart, p])} />
+        <Suspense fallback={<SectionFallback />}><InteractiveShowroom cat={activeCat} setCat={setActiveCat} onAdd={(p) => setCart([...cart, p])} /></Suspense>
 
         {/* 5. Retained experiences slider */}
-        <ExperiencesSlider />
+        <Suspense fallback={<SectionFallback />}><ExperiencesSlider /></Suspense>
 
         {/* 6. FireGuide blog */}
-        <BlogSection />
+        <Suspense fallback={<SectionFallback />}><BlogSection /></Suspense>
 
         {/* 7. Geographic outlets map dock */}
-        <StoreLocations />
+        <Suspense fallback={<SectionFallback />}><StoreLocations /></Suspense>
+
 
         {/* Footer */}
         <footer id="contact" className="border-t border-white/5 mt-12">
