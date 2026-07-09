@@ -1,0 +1,10 @@
+[build]
+  command = "bun run build"
+  publish = "dist/client"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Nitro's `netlify` preset emits a Netlify Function that handles SSR + server
+# functions. The publish dir above serves static client assets; everything
+# else falls through to the function via Netlify's generated redirects.
