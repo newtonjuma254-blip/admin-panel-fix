@@ -22,6 +22,7 @@ const CATEGORIES = [
 
 interface Row {
   id: string; name: string; category: string; price: number;
+  original_price?: number;
   duration: string; image: string; image_url: string; video_url: string;
   badge_tag: string; description: string;
 }
@@ -40,7 +41,7 @@ export function InteractiveShowroom({
   useEffect(() => {
     const load = async () => {
       const { data, error } = await db.from("products")
-        .select("id, name, category, price, duration, image, image_url, video_url, badge_tag, description")
+        .select("id, name, category, price, original_price, duration, image, image_url, video_url, badge_tag, description")
         .order("created_at", { ascending: true });
       if (error) {
         console.error("Products fetch error:", error);
@@ -105,7 +106,7 @@ export function InteractiveShowroom({
           <Loader2 className="h-6 w-6 animate-spin" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
           {filtered.map((r) => (
             <ShowroomCard key={r.id} row={r} onAdd={onAdd} />
           ))}
@@ -188,16 +189,23 @@ function ShowroomCard({ row, onAdd }: { row: Row; onAdd: (p: Product) => void })
         </span>
       </div>
 
-      <div className="space-y-3 p-4">
+      <div className="space-y-2 p-2.5 sm:space-y-3 sm:p-4">
         <div>
           <div className="text-[10px] font-heading uppercase tracking-[0.2em] text-muted-foreground">{row.category}</div>
-          <h3 className="mt-1 font-display text-lg font-semibold leading-tight">{row.name}</h3>
+          <h3 className="mt-1 font-display text-sm sm:text-lg font-semibold leading-tight">{row.name}</h3>
           <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{row.description}</p>
         </div>
         <div className="flex items-end justify-between gap-2 pt-2 border-t border-white/5">
           <div>
             <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Price</div>
-            <div className="font-display text-xl font-bold text-aurora">KSh {Number(row.price).toLocaleString()}</div>
+            <div className="flex items-baseline gap-1.5">
+              {row.original_price && Number(row.original_price) > Number(row.price) && (
+                <span className="text-xs text-muted-foreground line-through">
+                  KSh {Number(row.original_price).toLocaleString()}
+                </span>
+              )}
+              <div className="font-display text-xl font-bold text-aurora">KSh {Number(row.price).toLocaleString()}</div>
+            </div>
           </div>
           <div className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground"><Plus className="h-3 w-3" />{row.duration}</div>
         </div>
